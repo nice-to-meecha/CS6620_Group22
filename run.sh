@@ -20,18 +20,18 @@ GROUP22_ARN="arn:aws:iam::911656642006:user/stameshabello_butnotstameshabello"
 
 # Installing kubectl
 echo "Installing kubectl..."
-#curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.22.6/2022-03-09/bin/linux/amd64/kubectl
-#chmod +x ./kubectl
-#mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
-#kubectl version --short --client
+curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.22.6/2022-03-09/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+kubectl version --short --client
 echo ""
 
 
 # Installing eksctl
 echo "Installing eksctl..."
-#curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-#sudo mv /tmp/eksctl /usr/local/bin
-#eksctl version
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+sudo mv /tmp/eksctl /usr/local/bin
+eksctl version
 echo ""
 
 
@@ -51,4 +51,12 @@ python3 launch_template.py $template_name $template_tag $template_key $S3_bucket
 
 stack_name="Group22-CloudFormation-EKS-Stack"
 stack_tag="cs6620-group22-cloudformation-eks-stack"
-python3 cloudformation.py $stack_name $stack_tag
+python3 cloudstack.py $stack_name $stack_tag
+
+
+db_instance_name="Group22-RDS-database-instance"
+db_name="homeassistant"
+username="bello"
+password="password"
+python3 database.py $stack_name $db_instance_name $db_name $username $password
+

@@ -216,8 +216,8 @@ def main():
 
     :CLI arg stack_name: The name of the cloud stack, from which the VPC ID will
                          be garnered
-    :CLI arg db_name: The name of the database to be generated
     :CLI arg db_instance_name: The name of the instance of the database to be generated
+    :CLI arg db_name: The name of the database to be generated
     :CLI arg username: The master username for the database
     :CLI arg password: The password for the master user of the database
     '''
@@ -252,3 +252,7 @@ def main():
     db_tag = db_instance_name.replace("_", "-")
     create_database(db_name, db_instance_name, storage_capacity, db_instance_class, db_engine,
             username, password, db_sg_id, subnet_group_name, db_tag)
+
+
+
+main()
