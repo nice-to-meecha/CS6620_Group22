@@ -60,3 +60,10 @@ username="bello"
 password="password"
 python3 database.py $stack_name $db_instance_name $db_name $username $password
 
+
+
+
+# Creates IAM OIDC for cluster (for autoscaling)
+# Uncomment this after creating cluster
+#eksctl utils associate-iam-oidc-provider --cluster MY-CLUSTER --approve
+
