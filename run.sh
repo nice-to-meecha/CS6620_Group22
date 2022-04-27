@@ -62,8 +62,9 @@ python3 database.py $stack_name $db_instance_name $db_name $username $password
 
 
 
-
+#eks_cluster="Group22-EKS-cluster"
 # Creates IAM OIDC for cluster (for autoscaling)
 # Uncomment this after creating cluster
-#eksctl utils associate-iam-oidc-provider --cluster MY-CLUSTER --approve
+#eksctl utils associate-iam-oidc-provider --cluster $eks_cluster --approve
+#aws eks update-kubeconfig --region us-east-1 --name $eks_cluster
 
