@@ -1,0 +1,66 @@
+# HA Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: ha-service
+  labels:
+    app: ha
+spec:
+  type: LoadBalancer
+  selector:
+    app: ha
+  ports:
+  - port: 8123
+    targetPort: 8123
+
+---
+# HA Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ha
+  labels:
+    app: ha
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ha
+  template:
+    metadata:
+      labels:
+        app: ha
+    spec:
+      containers:
+      - name: ha
+        image: homeassistant/home-assistant:latest
+        ports:
+        - name: ha-port
+          containerPort: 8123
+          protocol: TCP
+        env:
+        - name: TZ
+          value: America/Chicago
+        - name: MYSQL_USER
+          value: bello
+        - name: MYSQL_PASSWORD
+          value: 1/107mySqL
+        - name: MYSQL_DATABASE
+          value: homeassistant
+        - name: MYSQL_HOST
+          value: mariadb.corobioge9yr.us-east-1.rds.amazonaws.com
+        volumeMounts:
+        - name: ha-config
+          mountPath: /config
+        - name: influxdb-data
+          mountPath: /influxdb_data
+      volumes:
+      - name: ha-config
+        hostPath:
+          path: /run_home_assistant/config
+          type: DirectoryOrCreate
+      - name: influxdb-data
+        hostPath:
+          path: /run_home_assistant/influxdb/data
+          type: DirectoryOrCreate
+
