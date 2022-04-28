@@ -107,11 +107,16 @@ def main():
     if (config_file_dir[-1] != "/"):
         config_file_dir = config_file_dir + "/"
         
-    config_file_dir = config_file_dir + "*.yaml"
+    config_file_yaml = config_file_dir + "*.yaml"
     object_tag = bucket_tag + "-object"
 
-    for file_name in glob(config_file_dir):
+    for file_name in glob(config_file_yaml):
         upload_file(file_name, bucket_name, object_tag, file_name)
+
+    config_file_storage = config_file_dir + ".storage/*"
+    for file_name in glob(config_file_storage):
+        upload_file(file_name, bucket_name, object_tag, file_name)
+
 
 
 

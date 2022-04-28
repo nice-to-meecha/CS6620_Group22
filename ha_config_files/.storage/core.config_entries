@@ -1,0 +1,73 @@
+{
+    "version": 1,
+    "minor_version": 1,
+    "key": "core.config_entries",
+    "data": {
+        "entries": [
+            {
+                "entry_id": "4421576533ce2b369adc9d0de2c61530",
+                "version": 1,
+                "domain": "sun",
+                "title": "Sun",
+                "data": {},
+                "options": {},
+                "pref_disable_new_entities": false,
+                "pref_disable_polling": false,
+                "source": "import",
+                "unique_id": null,
+                "disabled_by": null
+            },
+            {
+                "entry_id": "18cc6f1dc4702d596b9b08b4e429a1db",
+                "version": 1,
+                "domain": "radio_browser",
+                "title": "Radio Browser",
+                "data": {},
+                "options": {},
+                "pref_disable_new_entities": false,
+                "pref_disable_polling": false,
+                "source": "onboarding",
+                "unique_id": null,
+                "disabled_by": null
+            },
+            {
+                "entry_id": "814d8e903af092e1f735d557bdc11cc4",
+                "version": 1,
+                "domain": "tomorrowio",
+                "title": "Tomorrow.io",
+                "data": {
+                    "api_key": "ne0gAAQKhw4sNwj9xGi3pQSit7xAGx1l",
+                    "location": {
+                        "latitude": 42.34495385852278,
+                        "longitude": -71.08469724655153
+                    },
+                    "name": "Tomorrow.io"
+                },
+                "options": {
+                    "timestep": 5
+                },
+                "pref_disable_new_entities": false,
+                "pref_disable_polling": false,
+                "source": "user",
+                "unique_id": "ne0gAAQKhw4sNwj9xGi3pQSit7xAGx1l_42.34495385852278_-71.08469724655153",
+                "disabled_by": null
+            },
+            {
+                "entry_id": "08047b321e8df07bf819b3d9c47dbfb9",
+                "version": 1,
+                "domain": "ecobee",
+                "title": "ecobee",
+                "data": {
+                    "api_key": "hASh6SX6jTUh30LCFcZx8KNx5AfWzJUo",
+                    "refresh_token": "OXW4O7RmslrvMDIZiWehz_EFDmqGCwZ1ZW18XzHrs2rnL"
+                },
+                "options": {},
+                "pref_disable_new_entities": false,
+                "pref_disable_polling": false,
+                "source": "user",
+                "unique_id": null,
+                "disabled_by": null
+            }
+        ]
+    }
+}

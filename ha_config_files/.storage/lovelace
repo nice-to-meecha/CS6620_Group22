@@ -1,0 +1,72 @@
+{
+    "version": 1,
+    "minor_version": 1,
+    "key": "lovelace",
+    "data": {
+        "config": {
+            "title": "Home",
+            "views": [
+                {
+                    "path": "default_view",
+                    "title": "Home",
+                    "cards": [
+                        {
+                            "type": "entities",
+                            "entities": [
+                                "person.stamesha_bello"
+                            ]
+                        },
+                        {
+                            "type": "entities",
+                            "entities": [
+                                "binary_sensor.bedroom_occupancy",
+                                "binary_sensor.living_room_occupancy",
+                                "binary_sensor.nu_home_bedroom_occ_zone_occupancy",
+                                "binary_sensor.richards_4th_fl_occupancy",
+                                "binary_sensor.kitchen_occupancy"
+                            ],
+                            "title": "Binary sensor"
+                        },
+                        {
+                            "type": "thermostat",
+                            "entity": "climate.richards_4th_fl"
+                        },
+                        {
+                            "type": "entities",
+                            "entities": [
+                                "sensor.bedroom_temperature",
+                                "sensor.living_room_temperature",
+                                "sensor.nu_home_bedroom_occ_zone_temperature",
+                                "sensor.richards_4th_fl_humidity",
+                                "sensor.richards_4th_fl_temperature",
+                                "sensor.kitchen_temperature"
+                            ],
+                            "title": "Sensor"
+                        },
+                        {
+                            "type": "grid",
+                            "square": false,
+                            "columns": 1,
+                            "cards": [
+                                {
+                                    "show_current": true,
+                                    "show_forecast": false,
+                                    "type": "weather-forecast",
+                                    "entity": "weather.richards_4th_fl",
+                                    "secondary_info_attribute": "humidity"
+                                },
+                                {
+                                    "show_current": true,
+                                    "show_forecast": true,
+                                    "type": "weather-forecast",
+                                    "entity": "weather.tomorrow_io_daily",
+                                    "secondary_info_attribute": "humidity"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

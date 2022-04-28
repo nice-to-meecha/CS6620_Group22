@@ -1,0 +1,15 @@
+{
+    "version": 2,
+    "minor_version": 1,
+    "key": "person",
+    "data": {
+        "items": [
+            {
+                "name": "Stamesha Bello",
+                "user_id": "80211d0edaca4b42b9ff98047ab6db4f",
+                "device_trackers": [],
+                "id": "stamesha_bello"
+            }
+        ]
+    }
+}

@@ -43,14 +43,6 @@ node_role_tag="cs6620-group22-eks-node-role"
 #python3 create_roles.py $cluster_role_name $cluster_role_tag $node_role_name $node_role_tag
 
 
-# Creates EC2 Launch Template (for EKS worker nodes)
-template_name="Group22_EKS_EC2_launch_template"
-template_tag="cs6620-group22-eks-ec2-launch-template"
-template_key="stamesha-bello-key"
-S3_bucket_name="homeassistant-config"
-#python3 launch_template.py $template_name $template_tag $template_key $S3_bucket_name
-
-
 # Creates cloud stack, with networking resources (e.g. VPC, subnets, security groups, igw, etc)
 stack_name="Group22-CloudFormation-EKS-Stack"
 stack_tag="cs6620-group22-cloudformation-eks-stack"
@@ -70,6 +62,13 @@ s3_bucket_name="group22-home-assistant-config-bucket"
 s3_bucket_tag="cs6620-group22-config-s3-bucket"
 config_file_dir="ha_config_files/"
 python3 s3_bucket.py $s3_bucket_name $s3_bucket_tag $config_file_dir
+
+
+# Creates EC2 Launch Template (for EKS worker nodes)
+template_name="Group22_EKS_EC2_launch_template"
+template_tag="cs6620-group22-eks-ec2-launch-template"
+template_key="stamesha-bello-key"
+python3 launch_template.py $template_name $template_tag $template_key $s3_bucket_name $config_file_dir
 
 
 #eks_cluster="Group22-EKS-cluster"

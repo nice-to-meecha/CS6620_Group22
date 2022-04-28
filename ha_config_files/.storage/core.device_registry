@@ -1,0 +1,167 @@
+{
+    "version": 1,
+    "minor_version": 3,
+    "key": "core.device_registry",
+    "data": {
+        "devices": [
+            {
+                "config_entries": [
+                    "814d8e903af092e1f735d557bdc11cc4"
+                ],
+                "connections": [],
+                "identifiers": [
+                    [
+                        "tomorrowio",
+                        "ne0gAAQKhw4sNwj9xGi3pQSit7xAGx1l"
+                    ]
+                ],
+                "manufacturer": "Tomorrow.io",
+                "model": null,
+                "name": "Tomorrow.io",
+                "sw_version": "v4",
+                "hw_version": null,
+                "entry_type": "service",
+                "id": "f97527bd7f04dd46c07da97f85fdb209",
+                "via_device_id": null,
+                "area_id": null,
+                "name_by_user": null,
+                "disabled_by": null,
+                "configuration_url": null
+            },
+            {
+                "config_entries": [
+                    "08047b321e8df07bf819b3d9c47dbfb9"
+                ],
+                "connections": [],
+                "identifiers": [
+                    [
+                        "ecobee",
+                        "NRYL"
+                    ]
+                ],
+                "manufacturer": "ecobee",
+                "model": "ecobee Room Sensor",
+                "name": "Bedroom",
+                "sw_version": null,
+                "hw_version": null,
+                "entry_type": null,
+                "id": "17c2b7b9243bd9fc171df61d3aa73dca",
+                "via_device_id": null,
+                "area_id": null,
+                "name_by_user": null,
+                "disabled_by": null,
+                "configuration_url": null
+            },
+            {
+                "config_entries": [
+                    "08047b321e8df07bf819b3d9c47dbfb9"
+                ],
+                "connections": [],
+                "identifiers": [
+                    [
+                        "ecobee",
+                        "511822900927"
+                    ]
+                ],
+                "manufacturer": "ecobee",
+                "model": "ecobee4 Smart Thermostat",
+                "name": "Richards 4th Fl",
+                "sw_version": null,
+                "hw_version": null,
+                "entry_type": null,
+                "id": "f6d62643aa1ece2a2b6c4976300a1614",
+                "via_device_id": null,
+                "area_id": null,
+                "name_by_user": null,
+                "disabled_by": null,
+                "configuration_url": null
+            },
+            {
+                "config_entries": [
+                    "08047b321e8df07bf819b3d9c47dbfb9"
+                ],
+                "connections": [],
+                "identifiers": [
+                    [
+                        "ecobee",
+                        "VWHW"
+                    ]
+                ],
+                "manufacturer": "ecobee",
+                "model": "ecobee Room Sensor",
+                "name": "NU home bedroom occ zone",
+                "sw_version": null,
+                "hw_version": null,
+                "entry_type": null,
+                "id": "8b92d4ec58def0d08935e2205b5c2c01",
+                "via_device_id": null,
+                "area_id": null,
+                "name_by_user": null,
+                "disabled_by": null,
+                "configuration_url": null
+            },
+            {
+                "config_entries": [
+                    "08047b321e8df07bf819b3d9c47dbfb9"
+                ],
+                "connections": [],
+                "identifiers": [
+                    [
+                        "ecobee",
+                        "VWF7"
+                    ]
+                ],
+                "manufacturer": "ecobee",
+                "model": "ecobee Room Sensor",
+                "name": "kitchen",
+                "sw_version": null,
+                "hw_version": null,
+                "entry_type": null,
+                "id": "8ae588753523a242c113448a672cf881",
+                "via_device_id": null,
+                "area_id": null,
+                "name_by_user": null,
+                "disabled_by": null,
+                "configuration_url": null
+            },
+            {
+                "config_entries": [
+                    "08047b321e8df07bf819b3d9c47dbfb9"
+                ],
+                "connections": [],
+                "identifiers": [
+                    [
+                        "ecobee",
+                        "VWH4"
+                    ]
+                ],
+                "manufacturer": "ecobee",
+                "model": "ecobee Room Sensor",
+                "name": "Living Room",
+                "sw_version": null,
+                "hw_version": null,
+                "entry_type": null,
+                "id": "f03239d8c074fa2df60e95c1d78c7393",
+                "via_device_id": null,
+                "area_id": null,
+                "name_by_user": null,
+                "disabled_by": null,
+                "configuration_url": null
+            }
+        ],
+        "deleted_devices": [
+            {
+                "config_entries": [],
+                "connections": [],
+                "identifiers": [
+                    [
+                        "accuweather",
+                        "3509888"
+                    ]
+                ],
+                "id": "c55f7a05c3389d71c9ebf5548fd40f7d",
+                "orphaned_timestamp": 1651077483.171023
+            }
+        ]
+    }
+}

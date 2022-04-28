@@ -1,0 +1,28 @@
+{
+    "version": 1,
+    "minor_version": 1,
+    "key": "core.restore_state",
+    "data": [
+        {
+            "state": {
+                "entity_id": "person.stamesha_bello",
+                "state": "unknown",
+                "attributes": {
+                    "editable": false,
+                    "id": "stamesha_bello",
+                    "user_id": "80211d0edaca4b42b9ff98047ab6db4f",
+                    "friendly_name": "Stamesha Bello"
+                },
+                "last_changed": "2022-04-22T22:40:13.562447+00:00",
+                "last_updated": "2022-04-22T22:40:13.562447+00:00",
+                "context": {
+                    "id": "4b7fcdbfd97a08c13ae3daec88ba16df",
+                    "parent_id": null,
+                    "user_id": null
+                }
+            },
+            "extra_data": null,
+            "last_seen": "2022-04-28T13:25:14.244797+00:00"
+        }
+    ]
+}
