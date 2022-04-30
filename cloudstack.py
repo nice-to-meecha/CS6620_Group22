@@ -73,20 +73,47 @@ def get_vpc_subnet_ids(name: str):
                 StackName = name,
                 LogicalResourceId = "VPC")["StackResources"][0]["PhysicalResourceId"]
 
-        subnet1_id = CLOUD_FORMATION.describe_stack_resources(
+        public_subnet1_id = CLOUD_FORMATION.describe_stack_resources(
                 StackName = name,
                 LogicalResourceId = "PublicSubnet01")["StackResources"][0]["PhysicalResourceId"]
 
-        subnet2_id = CLOUD_FORMATION.describe_stack_resources(
+        public_subnet2_id = CLOUD_FORMATION.describe_stack_resources(
                 StackName = name,
                 LogicalResourceId = "PublicSubnet02")["StackResources"][0]["PhysicalResourceId"]
 
-        return (vpc_id, subnet1_id, subnet2_id)
+        private_subnet1_id = CLOUD_FORMATION.describe_stack_resources(
+                StackName = name,
+                LogicalResourceId = "PrivateSubnet01")["StackResources"][0]["PhysicalResourceId"]
+
+        private_subnet2_id = CLOUD_FORMATION.describe_stack_resources(
+                StackName = name,
+                LogicalResourceId = "PrivateSubnet02")["StackResources"][0]["PhysicalResourceId"]
+
+        return (vpc_id, public_subnet1_id, public_subnet2_id, private_subnet1_id, private_subnet2_id)
 
 
     except ClientError as client_error:
         logging.error(client_error)
 
+
+
+def get_control_plane_sg_id(name: str):
+    '''
+    Retrieves the security group ID -- specifically created for an EKS control plane --
+    of the specified CloudFormation stack
+
+    :param name: The name of the stack, whose control plane security group ID will be revealed
+
+    :return: The control plane security group ID of the provided stack
+    '''
+
+    try:
+        return CLOUD_FORMATION.describe_stack_resources(
+                StackName = name,
+                LogicalResourceId = "ControlPlaneSecurityGroup")["StackResources"][0]["PhysicalResourceId"]
+
+    except ClientError as client_error:
+        logging.error(client_error)
 
 
 

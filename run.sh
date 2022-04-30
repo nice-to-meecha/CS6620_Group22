@@ -14,8 +14,11 @@
 # To store the appropriate value, replace the value below with your own ARN.
 
 
-# Storing AWS account ARN
-GROUP22_ARN="arn:aws:iam::911656642006:user/stameshabello_butnotstameshabello"
+# Store appropriate AWS account ID (12-digit account identifier)
+group22_account_id="911656642006"
+
+# If want to use new database (without saved data), change the following to "true"
+new_database="false"
 
 
 # Installing kubectl
@@ -49,31 +52,89 @@ stack_tag="cs6620-group22-cloudformation-eks-stack"
 #python3 cloudstack.py $stack_name $stack_tag
 
 
-# Creates database to store Home Assistant's data
-db_instance_name="Group22-RDS-database-instance"
+# Database credentials
 db_name="homeassistant"
 username="bello"
 password="password"
-#python3 database.py $stack_name $db_instance_name $db_name $username $password
+
+
+# COME BACK TO THIS -- IF NEW DATABASE, NEED TO CHANGE ENDPOINT FOR SECRETS.YAML
+# PUT NEW DATABASE IN ***PRIVATE*** SUBNETS FOR SECURITY
+if [ $new_database == "true" ]
+then
+	# Creates database to store Home Assistant's data
+	db_instance_name="Group22-RDS-database-instance"
+	#python3 database.py $stack_name $db_instance_name $db_name $username $password
+
+else
+	db_instance_name="mariadb"
+	
+fi
 
 
 # Creates S3 bucket to store Home Assistant's config files
 s3_bucket_name="group22-home-assistant-config-bucket"
 s3_bucket_tag="cs6620-group22-config-s3-bucket"
 config_file_dir="ha_config_files/"
-python3 s3_bucket.py $s3_bucket_name $s3_bucket_tag $config_file_dir
+#python3 s3_bucket.py $s3_bucket_name $s3_bucket_tag $config_file_dir
 
 
 # Creates EC2 Launch Template (for EKS worker nodes)
 template_name="Group22_EKS_EC2_launch_template"
 template_tag="cs6620-group22-eks-ec2-launch-template"
 template_key="stamesha-bello-key"
-python3 launch_template.py $template_name $template_tag $template_key $s3_bucket_name $config_file_dir
+#python3 launch_template.py $template_name $template_tag $template_key $s3_bucket_name $config_file_dir
 
 
-#eks_cluster="Group22-EKS-cluster"
+# Creates EKS cluster
+cluster_name="Group22-EKS-cluster"
+cluster_role_arn="arn:aws:iam::${group22_account_id}:role/${cluster_role_name}"
+cluster_tag="cs6620-group22-eks-cluster"
+node_group_name="Group22-EKS-EC2-node-group"
+node_role_arn="arn:aws:iam::${group22_account_id}:role/${node_role_name}"
+node_group_tag="cs6620-group22-eks-ec2-node-group"
+#python3 eks_cluster.py $cluster_name $cluster_role_arn $cluster_tag $stack_name $node_group_name \
+#	$node_role_arn $node_group_tag $template_name
+
+
+# Configures kubectl to communicate with EKS cluster
+#aws eks update-kubeconfig --region us-east-1 --name $cluster_name
+
+
 # Creates IAM OIDC for cluster (for autoscaling)
-# Uncomment this after creating cluster
-#eksctl utils associate-iam-oidc-provider --cluster $eks_cluster --approve
-#aws eks update-kubeconfig --region us-east-1 --name $eks_cluster
+#eksctl utils associate-iam-oidc-provider --cluster $cluster_name --approve
+#aws eks update-kubeconfig --region us-east-1 --name $cluster_name
+
+autoscaler_policy_name="Group22_EKSAutoscalerPolicy"
+autoscaler_policy_tag="cs6620-group22-eks-autoscaler-policy"
+autoscaler_role_name="Group22_EKSAutoscalerRole"
+autoscaler_role_tag="cs6620-group22-eks-autoscaler-role"
+
+create_autoscaler_role=$(cat <<EOF
+from create_roles import create_autoscaler_role
+
+create_autoscaler_role('${autoscaler_policy_name}', '${autoscaler_policy_tag}',
+        '${autoscaler_role_name}', '${autoscaler_role_tag}',
+        '${group22_account_id}', '${cluster_name}')
+
+EOF
+)
+#python3 -c "${create_autoscaler_role}"
+
+
+#kubectl apply -f cluster-autoscaler-autodiscover.yaml
+
+#kubectl annotate serviceaccount cluster-autoscaler -n kube-system \
+#	eks.amazonaws.com/role-arn=arn:aws:iam::${group22_account_id}:role/${autoscaler_role_name}
+
+#kubectl patch deployment cluster-autoscaler -n kube-system \
+#	-p '{"spec":{"template":{"metadata":{"annotations":{"cluster-autoscaler.kubernetes.io/safe-to-evict": "false"}}}}}'
+
+#kubectl -n kube-system edit deployment.apps/cluster-autoscaler
+
+kubectl set image deployment cluster-autoscaler -n kube-system \
+	cluster-autoscaler=k8s.gcr.io/autoscaling/cluster-autoscaler:v1.21.2
+
+kubectl -n kube-system logs -f deployment.apps/cluster-autoscaler
+
 

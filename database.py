@@ -223,7 +223,8 @@ def main():
     '''
 
     stack_name = sys.argv[1]
-    vpc_id, subnet1_id, subnet2_id = cloudstack.get_vpc_subnet_ids(stack_name)
+    vpc_id, public_subnet1_id, public_subnet2_id, private_subnet1_id, private_subnet2_id = \
+            cloudstack.get_vpc_subnet_ids(stack_name)
 
     db_instance_name = sys.argv[2]
     db_sg_name = db_instance_name + "_security_group"
@@ -241,7 +242,7 @@ def main():
     subnet_group_tag = subnet_group_name.replace("_", "-")
     subnet_group_description = "Subnet group for {}".format(db_instance_name)
     create_database_subnet_group(subnet_group_name, subnet_group_tag, subnet_group_description,
-            [subnet1_id, subnet2_id])
+            [public_subnet1_id, public_subnet2_id])
 
     db_name = sys.argv[3]
     storage_capacity = 20

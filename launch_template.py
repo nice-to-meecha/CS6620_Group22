@@ -66,7 +66,7 @@ def create_launch_template(name: str, tag: str, user_data: str, key: str = None)
                     VersionDescription = "Launch template for EC2 worker nodes",
                     LaunchTemplateData = {
                         'EbsOptimized': False,
-                        'InstanceType': 't2.micro',
+                        'InstanceType': 't3.medium',
                         'UserData': user_data
                         },
                     TagSpecifications = [
