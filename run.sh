@@ -185,7 +185,7 @@ print(create_security_group('${vpc_id}', '${efs_sg_name}',
 
 EOF
 )
-efs_sg_id=$(python3 -c "${create_efs_csi_sg}")
+#efs_sg_id=$(python3 -c "${create_efs_csi_sg}")
 
 efs_sg_rule_tag="ca6620-group22-eks-efs-sg-inbound-rule"
 efs_csi_sg_inbound_rule=$(cat <<EOF
@@ -201,4 +201,7 @@ efs_creation_token="Group22_EKS_EFS_token"
 efs_file_tag="cs6620-group22-eks-efs-file-system"
 #python3 efs_file_system.py ${efs_creation_token} ${efs_file_tag} ${stack_name} ${efs_sg_id}
 
-kubectl -f kube_ha/ha_depl_serv.yaml
+
+python3 ec2_helper.py ${stack_name} ${s3_bucket_name} ${efs_creation_token}
+
+#kubectl -f kube_ha/ha_depl_serv.yaml

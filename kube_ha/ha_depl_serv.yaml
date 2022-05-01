@@ -55,17 +55,16 @@ spec:
         - name: MYSQL_USER
           value: bello
         - name: MYSQL_PASSWORD
-          value: 1/107mySqL
+          value: password
         - name: MYSQL_DATABASE
           value: homeassistant
         - name: MYSQL_HOST
           value: mariadb.corobioge9yr.us-east-1.rds.amazonaws.com
         volumeMounts:
         - name: ha-config
-          mountPath: /config
+          mountPath: /efs-mount-point/run_home_assistant/config
       volumes:
       - name: ha-config
-        hostPath:
-          path: /run_home_assistant/config
-          type: DirectoryOrCreate
+        persistentVolumeClaim
+          claimName: efs-claim
 

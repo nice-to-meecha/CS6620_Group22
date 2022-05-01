@@ -6,7 +6,7 @@ Group 22:
     Maharshi Pathak
     Nic Shepard
 
-This script will produce an EFS.
+This script will produce an EFS system.
 '''
 
 import boto3, logging, sys, time
@@ -70,6 +70,54 @@ def create_mount_target(file_system_id: str, subnet_id: str, sg_id: str):
 
 
 
+def wait_until_active(efs_creation_token: str):
+    '''
+    Pauses the process, until the EFS system is available
+
+    :param efs_creation_token: The token used to create the EFS system, for which the process
+                               is waiting
+
+    :return: The ID of the speciied file system
+    '''
+
+    try:
+        print("Waiting for {} to become available".format(efs_creation_token))
+
+        while (EFS.describe_file_systems(CreationToken = efs_creation_token)['FileSystems'][0]['LifeCycleState'] !=
+                "available"):
+            time.sleep(1)
+
+        print("{} is now available".format(efs_creation_token))
+
+        return EFS.describe_file_systems(CreationToken = efs_creation_token)['FileSystems'][0]['FileSystemId']
+
+    except ClientError as client_error:
+        logging.error(client_error)
+
+
+
+def get_ip(efs_creation_token: str):
+    '''
+    Returns the IP address of the provided EFS system
+
+    :param efs_creation_token: The creation token of the EFS system, for which the IP address
+                                will be reported
+
+    :return: The IP address of the provided EFS system
+    '''
+
+    try:
+        efs_id = wait_until_active(efs_creation_token)
+
+        return EFS.describe_mount_targets(
+                FileSystemId = efs_id
+                )['MountTargets'][0]['IpAddress']
+
+    except ClientError as client_error:
+        logging.error(client_error)
+
+
+
 def main():
     '''
     Creates an EFS file system and establishes mount targets in relevant subnets
@@ -91,8 +139,8 @@ def main():
     cloud_stack_name = sys.argv[3]
     vpc_id, pub_sub1_id, pub_sub2_id, priv_sub1_id, priv_sub2 = get_vpc_subnet_ids(cloud_stack_name)
 
-    # Forcing process to sleep, since no available waiter for EFS
-    time.sleep(5)
+    wait_until_active(file_system_id)
+
     sg_id = sys.argv[4]
     for subnet_id in [pub_sub1_id, pub_sub2_id, priv_sub1_id, priv_sub2]:
         create_mount_target(file_system_id, subnet_id, sg_id)
