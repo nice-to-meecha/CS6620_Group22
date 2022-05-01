@@ -101,7 +101,7 @@ node_group_tag="cs6620-group22-eks-ec2-node-group"
 #aws eks update-kubeconfig --region us-east-1 --name $cluster_name
 
 
-# Creates IAM OIDC for cluster (for autoscaling)
+# Creates IAM OIDC for cluster (for autoscaling and EFS CSI)
 #eksctl utils associate-iam-oidc-provider --cluster $cluster_name --approve
 #aws eks update-kubeconfig --region us-east-1 --name $cluster_name
 
@@ -132,9 +132,73 @@ EOF
 
 #kubectl -n kube-system edit deployment.apps/cluster-autoscaler
 
-kubectl set image deployment cluster-autoscaler -n kube-system \
-	cluster-autoscaler=k8s.gcr.io/autoscaling/cluster-autoscaler:v1.21.2
+#kubectl set image deployment cluster-autoscaler -n kube-system \
+#	cluster-autoscaler=k8s.gcr.io/autoscaling/cluster-autoscaler:v1.21.2
 
-kubectl -n kube-system logs -f deployment.apps/cluster-autoscaler
+#kubectl -n kube-system logs -f deployment.apps/cluster-autoscaler
+
+efs_csi_policy_name="Group22_EKS_EFS_CSI_Policy"
+efs_csi_policy_tag="cs6620-group22-eks-efs-csi-policy"
+efs_csi_role_name="Group22_EKS_EFS_CSI_Role"
+efs_csi_role_tag="cs6620-group22-eks-efs-csi-role"
+
+create_efs_csi_role=$(cat <<EOF
+from create_roles import create_efs_csi_role
+
+create_efs_csi_role('${efs_csi_policy_name}', '${efs_csi_policy_tag}',
+        '${efs_csi_role_name}', '${efs_csi_role_tag}',
+        '${group22_account_id}', '${cluster_name}')
+
+EOF
+)
+#python3 -c "${create_efs_csi_role}"
 
 
+cat << EOF > efs-service-account.yaml
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: efs-csi-controller-sa
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: aws-efs-csi-driver
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::${group22_account_id}:role/${efs_csi_role_name}
+EOF
+
+#kubectl apply -f efs-service-account.yaml
+
+#kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.1"
+
+vpc_id=$(aws eks describe-cluster --name ${cluster_name} --query "cluster.resourcesVpcConfig.vpcId" --output text)
+cidr_block=$(aws ec2 describe-vpcs --vpc-ids ${vpc_id} --query "Vpcs[].CidrBlock" --output text)
+
+efs_sg_name="Group22_EKS_EFS"
+efs_sg_tag="cs6620-group22-eks-efs-sg"
+efs_sg_desc="Security group for EKS EFS"
+create_efs_csi_sg=$(cat <<EOF
+from database import create_security_group
+
+print(create_security_group('${vpc_id}', '${efs_sg_name}',
+        '${efs_sg_tag}', '${efs_sg_desc}'))
+
+EOF
+)
+efs_sg_id=$(python3 -c "${create_efs_csi_sg}")
+
+efs_sg_rule_tag="ca6620-group22-eks-efs-sg-inbound-rule"
+efs_csi_sg_inbound_rule=$(cat <<EOF
+from database import add_inbound_rule
+
+add_inbound_rule('${efs_sg_id}', 'tcp', 2049, '${cidr_block}', '${efs_sg_rule_tag}')
+
+EOF
+)
+#python3 -c "${efs_csi_sg_inbound_rule}"
+
+efs_creation_token="Group22_EKS_EFS_token"
+efs_file_tag="cs6620-group22-eks-efs-file-system"
+#python3 efs_file_system.py ${efs_creation_token} ${efs_file_tag} ${stack_name} ${efs_sg_id}
+
+kubectl -f kube_ha/ha_depl_serv.yaml

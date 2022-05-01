@@ -16,21 +16,32 @@ spec:
 ---
 # HA Deployment
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: ha
   labels:
     app: ha
 spec:
-  replicas: 6
+  replicas: 1
   selector:
     matchLabels:
       app: ha
+  serviceName: ha
   template:
     metadata:
       labels:
         app: ha
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: "app"
+                  operator: In
+                  values:
+                  - ha
+            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: ha
         image: homeassistant/home-assistant:latest
@@ -52,15 +63,9 @@ spec:
         volumeMounts:
         - name: ha-config
           mountPath: /config
-        - name: influxdb-data
-          mountPath: /influxdb_data
       volumes:
       - name: ha-config
         hostPath:
           path: /run_home_assistant/config
-          type: DirectoryOrCreate
-      - name: influxdb-data
-        hostPath:
-          path: /run_home_assistant/influxdb/data
           type: DirectoryOrCreate
 

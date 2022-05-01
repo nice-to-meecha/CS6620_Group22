@@ -126,7 +126,6 @@ def create_autoscaler_role(policy_name: str, policy_tag: str, role_name: str, ro
     :param account_id: The 12 digit account ID for the AWS account, with which this
                        script will be run
     :param cluster_name: The name of the EKS cluster to which the autoscaler will be added
-    :param autoscaler_oidc: The OpenID Connect Provider URL generated for the autoscaler, via command line
 
     :return: None
     '''
@@ -179,6 +178,122 @@ def create_autoscaler_role(policy_name: str, policy_tag: str, role_name: str, ro
                         "StringEquals": {
                           "${cluster_oidc}:sub": [
                             "system:serviceaccount:kube-system:cluster-autoscaler"
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }'''))
+
+        assume_role_policy_dict = {
+                'account_id': account_id,
+                'cluster_oidc': cluster_oidc
+                }
+        
+        assume_role_policy = assume_role_policy_template.substitute(assume_role_policy_dict)
+
+        IAM.create_role(
+                RoleName = role_name,
+                AssumeRolePolicyDocument = assume_role_policy,
+                Tags = [
+                    {
+                        'Key': 'Name',
+                        'Value': role_tag
+                        }
+                    ])
+
+        IAM.attach_role_policy(
+                RoleName = role_name,
+                PolicyArn = "arn:aws:iam::{}:policy/{}".format(account_id, policy_name)
+                )
+
+    except ClientError as client_error:
+        logging.error(client_error)
+
+
+
+def create_efs_csi_role(policy_name: str, policy_tag: str, role_name: str, role_tag: str,
+        account_id: str, cluster_name: str):
+    '''
+    Creates an EFS CSI policy and role for the EFS Container Storage Interface driver,
+    which will allow EC2 worker nodes to access an established EFS store.
+
+    :param policy_name: The name of the EFS CSI policy to be created
+    :param policy_tag: The tag for the EFS CSI policy
+    :param role_name: The name of the EFS CSI role to be created
+    :param role_tag: The tag for the EFS CSI role
+    :param account_id: The 12 digit account ID for the AWS account, with which this
+                       script will be run
+    :param cluster_name: The name of the EKS cluster to which the EFS CSI driver will be added
+
+    :return: None
+    '''
+
+    try:
+        efs_csi_policy = textwrap.dedent('''\
+                {
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                        "elasticfilesystem:DescribeAccessPoints",
+                        "elasticfilesystem:DescribeFileSystems"
+                        ],
+                      "Resource": "*"
+                      },
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                        "elasticfilesystem:CreateAccessPoint"
+                        ],
+                      "Resource": "*",
+                      "Condition": {
+                        "StringLike": {
+                          "aws:RequestTag/efs.csi.aws.com/cluster": "true"
+                          }
+                        }
+                      },
+                    {
+                      "Effect": "Allow",
+                      "Action": "elasticfilesystem:DeleteAccessPoint",
+                      "Resource": "*",
+                      "Condition": {
+                        "StringEquals": {
+                          "aws:ResourceTag/efs.csi.aws.com/cluster": "true"
+                          }
+                        }
+                      }
+                    ]
+                  }''')
+
+        IAM.create_policy(
+                PolicyName = policy_name,
+                PolicyDocument = efs_csi_policy,
+                Tags = [
+                    {
+                        'Key': 'Name',
+                        'Value': policy_tag
+                        }
+                    ]
+                )
+
+        cluster_oidc = get_cluster_oidc(cluster_name)
+
+        assume_role_policy_template = Template(textwrap.dedent('''\
+                {
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Action": "sts:AssumeRoleWithWebIdentity",
+                      "Principal": {
+                        "Federated": "arn:aws:iam::${account_id}:oidc-provider/${cluster_oidc}"
+                        },
+                      "Condition": {
+                        "StringEquals": {
+                          "${cluster_oidc}:sub": [
+                            "system:serviceaccount:kube-system:efs-csi-controller-sa"
                             ]
                           }
                         }
