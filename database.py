@@ -194,9 +194,7 @@ def get_database_endpoint(database_instance_identifier: str):
 
     try:
         db_waiter = RDS.get_waiter('db_instance_available')
-        print("\nWaiting for active status of the database...")
         db_waiter.wait(DBInstanceIdentifier = database_instance_identifier)
-        print("\n{} is active".format(database_instance_identifier))
 
         return RDS.describe_db_instances(
                 DBInstanceIdentifier = database_instance_identifier

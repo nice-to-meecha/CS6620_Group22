@@ -84,11 +84,9 @@ def create_node_group(cluster_name: str, node_group_name: str, subnet_ids: list,
                 tags = {
                     'Name': tag
                     },
-                launchTemplate = {
-                    'name': template_name
-                    },
                 updateConfig = {
-                    'maxUnavailable': 1}
+                    'maxUnavailable': 1
+                    }
                 )
 
     except ClientError as client_error:
@@ -137,8 +135,6 @@ def main():
                             to provide the EC2 worker nodes with permissions
                             to perform necessary actions
     :CLI arg node_group_tag: The tag for the EC2 worker node group
-    :CLI arg template_name: The name of the EC2 launch template to be utilized for
-                            instantiation of the worker nodes
     '''
 
     cluster_name = sys.argv[1]
@@ -151,14 +147,12 @@ def main():
     subnet_ids = [public_subnet1_id, public_subnet2_id, private_subnet1_id, private_subnet2_id]
 
     control_plane_sg_id = get_control_plane_sg_id(stack_name)
-    #create_cluster(cluster_name, control_panel_arn, subnet_ids, [control_plane_sg_id], cluster_tag)
+    create_cluster(cluster_name, control_panel_arn, subnet_ids, [control_plane_sg_id], cluster_tag)
 
     node_group_name = sys.argv[5]
     node_role_arn = sys.argv[6]
     node_group_tag = sys.argv[7]
-    template_name = sys.argv[8]
-    create_node_group(cluster_name, node_group_name, subnet_ids, node_role_arn, node_group_tag,
-            template_name)
+    create_node_group(cluster_name, node_group_name, subnet_ids, node_role_arn, node_group_tag)
 
 
 

@@ -81,13 +81,10 @@ def wait_until_active(efs_creation_token: str):
     '''
 
     try:
-        print("Waiting for {} to become available".format(efs_creation_token))
-
         while (EFS.describe_file_systems(CreationToken = efs_creation_token)['FileSystems'][0]['LifeCycleState'] !=
                 "available"):
             time.sleep(1)
 
-        print("{} is now available".format(efs_creation_token))
 
         return EFS.describe_file_systems(CreationToken = efs_creation_token)['FileSystems'][0]['FileSystemId']
 
@@ -107,7 +104,10 @@ def get_ip(efs_creation_token: str):
     '''
 
     try:
+        print("Waiting for {} to become available".format(efs_creation_token))
         efs_id = wait_until_active(efs_creation_token)
+        print("{} is now available".format(efs_creation_token))
+
 
         return EFS.describe_mount_targets(
                 FileSystemId = efs_id
