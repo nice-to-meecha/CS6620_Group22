@@ -9,7 +9,7 @@
 #
 # This script will finish the creation of resources necessary to use Home Assistant
 #
-# Store the instance profile ARN of EKS_NodeRole within instance_profile_arn
+# Store the instance profile ARN of Group22_EKSNodeRole within instance_profile_arn
 
 
 instance_profile_arn=""

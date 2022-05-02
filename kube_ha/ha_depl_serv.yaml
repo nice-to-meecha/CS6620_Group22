@@ -62,7 +62,7 @@ spec:
           value: mariadb.corobioge9yr.us-east-1.rds.amazonaws.com
         volumeMounts:
         - name: ha-config
-          mountPath: /efs-mount-point/run_home_assistant/config
+          mountPath: /config
       volumes:
       - name: ha-config
         persistentVolumeClaim:

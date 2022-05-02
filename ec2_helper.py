@@ -47,9 +47,9 @@ def create_ec2_helper(bucket: str, efs_ip: str, subnet_id: str, instance_profile
 
                 sudo mkdir /efs-mount-point
 
-                sudo mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport ${efs_ip}:/  /efs-mount-point
+                sudo mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport ${efs_ip}:/  /efs-mount-point
 
-                sudo aws s3 cp s3://${bucket}/ha_config_files /efs-mount-point/run_home_assistant/config/ --recursive
+                sudo aws s3 cp s3://${bucket}/ha_config_files /efs-mount-point/ --recursive
                 '''))
 
         user_data = user_data_template.substitute(
@@ -69,7 +69,6 @@ def create_ec2_helper(bucket: str, efs_ip: str, subnet_id: str, instance_profile
                 IamInstanceProfile = {
                     'Arn': instance_profile
                     },
-                KeyName = "stamesha-bello-key",
                 TagSpecifications = [
                     {
                         'ResourceType': 'instance',

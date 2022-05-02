@@ -72,7 +72,7 @@ def create_node_group(cluster_name: str, node_group_name: str, subnet_ids: list,
                 clusterName = cluster_name,
                 nodegroupName = node_group_name,
                 scalingConfig = {
-                    'minSize': 1,
+                    'minSize': 2,
                     'maxSize': 10,
                     'desiredSize': 2
                     },
