@@ -147,13 +147,13 @@ def main():
     control_plane_sg_id = get_control_plane_sg_id(stack_name)
     create_cluster(cluster_name, control_panel_arn, subnet_ids, [control_plane_sg_id], cluster_tag)
 
+    # Waiting until cluster finished creating
+    get_cluster_oidc(cluster_name)
+
     node_group_name = sys.argv[5]
     node_role_arn = sys.argv[6]
     node_group_tag = sys.argv[7]
     create_node_group(cluster_name, node_group_name, subnet_ids, node_role_arn, node_group_tag)
-
-    # Waiting until cluster finished creating
-    get_cluster_oidc(cluster_name)
 
 
 

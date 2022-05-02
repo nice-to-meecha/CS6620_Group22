@@ -19,8 +19,7 @@ from string import Template
 
 EC2 = boto3.client('ec2', 'us-east-1')
 
-
-
+    
 def create_ec2_helper(bucket: str, efs_ip: str, subnet_id: str, instance_profile: str, tag: str):
     '''
     Creates a simple EC2 instance, which will transfer files from an
@@ -68,8 +67,9 @@ def create_ec2_helper(bucket: str, efs_ip: str, subnet_id: str, instance_profile
                 SubnetId = subnet_id,
                 UserData = user_data,
                 IamInstanceProfile = {
-                    'Name': instance_profile
+                    'Arn': instance_profile
                     },
+                KeyName = "stamesha-bello-key",
                 TagSpecifications = [
                     {
                         'ResourceType': 'instance',

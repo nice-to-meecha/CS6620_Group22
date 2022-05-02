@@ -139,7 +139,9 @@ def main():
     cloud_stack_name = sys.argv[3]
     vpc_id, pub_sub1_id, pub_sub2_id, priv_sub1_id, priv_sub2 = get_vpc_subnet_ids(cloud_stack_name)
 
-    wait_until_active(file_system_id)
+    # Wait 1 minute to ensure not checking too early
+    time.sleep(60)
+    wait_until_active(token)
 
     sg_id = sys.argv[4]
     for subnet_id in [pub_sub1_id, pub_sub2_id, priv_sub1_id, priv_sub2]:

@@ -65,6 +65,6 @@ spec:
           mountPath: /efs-mount-point/run_home_assistant/config
       volumes:
       - name: ha-config
-        persistentVolumeClaim
+        persistentVolumeClaim:
           claimName: efs-claim
 

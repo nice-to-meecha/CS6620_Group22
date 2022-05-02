@@ -47,7 +47,7 @@ python3 create_roles.py $cluster_role_name $cluster_role_tag $node_role_name $no
 
 
 # Creates cloud stack, with networking resources (e.g. VPC, subnets, security groups, igw, etc)
-stack_name="Group22-CloudFormation-EKS-Stack-Final"
+stack_name="Group22-CloudFormation-EKS-Stack-Final-Please"
 stack_tag="cs6620-group22-cloudformation-eks-stack"
 python3 cloudstack.py $stack_name $stack_tag
 
@@ -231,10 +231,3 @@ spec:
     volumeHandle: ${efs_id}
 EOF
 
-ec2_tag="cs6620-group22-ec2-helper"
-python3 ec2_helper.py ${stack_name} ${s3_bucket_name} ${efs_creation_token} ${ec2_tag} ${node_role_name}
-
-kubectl -f kube_ha/
-
-echo ""
-kubectl get svc
