@@ -12,7 +12,7 @@
 # Store the instance profile ARN of EKS_NodeRole within instance_profile_arn
 
 
-instance_profile_arn="arn:aws:iam::911656642006:instance-profile/eks-86c0415a-82e2-1524-853b-e7a9e0b4af38"
+instance_profile_arn=""
 
 
 stack_name="Group22-CloudFormation-EKS-Stack-Final-Please"
@@ -23,5 +23,3 @@ python3 ec2_helper.py ${stack_name} ${s3_bucket_name} ${efs_creation_token} ${ec
 
 kubectl apply -f kube_ha/
 
-echo ""
-kubectl get svc
