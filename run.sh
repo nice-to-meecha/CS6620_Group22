@@ -47,7 +47,7 @@ python3 create_roles.py $cluster_role_name $cluster_role_tag $node_role_name $no
 
 
 # Creates cloud stack, with networking resources (e.g. VPC, subnets, security groups, igw, etc)
-stack_name="Group22-CloudFormation-EKS-Stack"
+stack_name="Group22-CloudFormation-EKS-Stack-Final"
 stack_tag="cs6620-group22-cloudformation-eks-stack"
 python3 cloudstack.py $stack_name $stack_tag
 

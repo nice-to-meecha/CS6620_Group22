@@ -53,7 +53,7 @@ def create_cluster(name: str, arn: str, subnet_ids: list, sg_ids: list, tag: str
 
 
 def create_node_group(cluster_name: str, node_group_name: str, subnet_ids: list,
-        node_role_arn: str, tag: str, template_name: str):
+        node_role_arn: str, tag: str):
     '''
     Creates an EKS-managed node group, which will host the Home Assistant pods
 
@@ -63,8 +63,6 @@ def create_node_group(cluster_name: str, node_group_name: str, subnet_ids: list,
     :param node_role_arn: The Amazon Resource Name for the IAM role (previously created),
                           allowing EC2 worker nodes to perform appropriate actions
     :param tag: The tag for the node group
-    :param template_name: The name of the EC2 launch template to be utilized for
-                          instantiation of the worker nodes
 
     :return: None
     '''
@@ -153,6 +151,9 @@ def main():
     node_role_arn = sys.argv[6]
     node_group_tag = sys.argv[7]
     create_node_group(cluster_name, node_group_name, subnet_ids, node_role_arn, node_group_tag)
+
+    # Waiting until cluster finished creating
+    get_cluster_oidc(cluster_name)
 
 
 
