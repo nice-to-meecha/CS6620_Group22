@@ -113,14 +113,17 @@ with some of AWS' many cloud services. In order to run properly, there are a few
    
    <br />
 9. Once Home Assistant is ready for connections, use the following command to get the external IP address
-   used to access Home Assistant.
+   used to access Home Assistant:
+   ```
+   kubectl get svc
+   ```
    - Add the 8123 port to the address, to access Home Assistant. In the case below, you would use the following:
 
      "a63aade5a322644d49583980c4e3c842-1145205109.us-east-1.elb.amazonaws.com:8123"
    
    ![Image showing external address](https://i.imgur.com/eQXeedt.jpg)
    
-   <br />:
+   <br />
 10. Once available, Home Assistant will start by showing one of two screens:
     1. The onboarding screen, in case a new database was created. Sign in using whatever credentials you'd like.
     
