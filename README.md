@@ -19,25 +19,113 @@ with some of AWS' many cloud services. In order to run properly, there are a few
     
     ![Location to store account ID in run.sh script](https://i.imgur.com/bVoX6Yv.jpg)
     
-    
+    <br />
 2. Determine if you want to use a database retaining saved information or an empty one.
    - If you want to reproduce the dashboard shown during the presentation, use the pre-existing database.
         - You will not have to make any changes, in this case.
         
    - If you want to start with a blank slate, you must do 2 things:
-        1. Change the value of "new_database" to "true"
+        - Change the value of "new_database" to "true"
          
            ![Location of new_database variable](https://i.imgur.com/q6nsYZE.jpg)
            
-        2. Go to the "ha_config_files" directory. Delete the ".storage" directory within it,
+        - Go to the "ha_config_files" directory. Delete the ".storage" directory within it,
            with the following command:
-           
-           ```rm -r .storage```
+           ```
+           rm -r .storage
+           ```
            
            #### This is very important. If you do not delete the .storage directory, you won't be able to create
            #### an account, once Home Assistant starts
            
            ![Location of .storage file](https://i.imgur.com/rCEAhaD.jpg)
            
-           
-3. 
+           <br />
+3. After that, go back to the home directory of the cloned repository (if not already there). Use the following command
+   to execute the run.sh script:
+   
+   ```sh run.sh```
+   
+   This step will take quite a bit of time -- even more so if you elected to create a new database.
+   The resource stack (made by CloudFormation) and the EKS cluster each take around 10 minutes to become available.
+   The database usually takes even more time.
+   If you are using the CloudShell to run this, make sure to interact with the environment (click, tap keys, etc),
+   to prevent it from timing out.
+   
+   <br />
+4. Toward the end of execution of the script, another file will be opened. Under the "container" section (near the
+   bottom of the file), add the following lines:
+   ```
+   - --balance-similar-node-groups
+   - --skip-nodes-with-system-pods=false
+   ```
+   
+   ![Location of container section]()
+   
+   
+   ![What the file should look like after adding the two lines]()
+   
+   Make sure to save the file, prior to exiting. If using the CloudShell, use ":x" or ":wq" to save and close the file.
+   A few more processes will run afterward. This entails more waiting. A warning will arise, indicating deprecation
+   of the EFS CSI driver currently in use. Ignore that.
+   
+   The appearance of "fs-### is ready" indicates the end of the run.sh script.
+   
+   ![Picture showing the end of run.sh script]()
+
+    <br /> 
+5. Go to the IAM service. Under "Roles", select the newly created "Group22_EKSNodeRole". Refresh the page and then copy
+   the **Instance Profile ARN**.
+   - It is suggested that you refresh the page, in case the provided Instance Profile ARN is not up-to-date. If running
+     this script more than once, it will often retain the old ARN, until the page is refreshed.
+     
+    ![Location of the Group22_EKSNodeRole]()
+    
+    <br /?
+6. Paste the "Group22_EKSNodeRole" Instance Profile ARN within the *instance_profile_name* variable of the "finish.sh" file
+
+    ![Location of the instance_profile_name variable]()
+    
+    <br />
+7. Run the finish.sh file with the following command:
+   ```
+   sh finish.sh
+   ```
+   
+8. Once that is done (which will be much shorter than the first), you will wait for the pods to finish creating.
+   You can check the status of the Home Assistant pod with the following command:
+   ```
+   kubectl get pods
+   ```
+   
+   If you want to see all of the pods being created, use:
+   ```
+   kubectl get pods -A
+   ```
+   
+   Keep using the "kubectl get pods" every so often, until the Home Assistant pod has a final status of "Ready"
+   
+   ![Image showing Home Assistant pod at ready]()
+   
+   <br />
+9. Once Home Assistant is ready for connections, use the following command to get the external IP address
+   used to access Home Assistant.
+   - Add the 8123 port to the address, to access Home Assistant.
+          <external_ip>:8123
+   
+   ![Image showing external address]
+   
+10. Once available, Home Assistant will start by showing one of two screens:
+    1. The onboarding screen, in case a new database was created
+       ![Home Assistant onboarding screen]()
+       
+       Sign in using whatever credentials you'd like.
+       
+    
+    2. Or the sign-in screen, if you used the pre-existing database. You must sign in with the following credentials:
+       - Username: bello
+       - Password: 1234
+       ![Home Assistant sign-in screen]()
+       
+       <br />
+11. Set up is complete. Use Home Assistant however you'd like.
